@@ -6,6 +6,7 @@ const {
 
 const {
     readFileSync,
+    writeFileSync,
     statSync
 } = require('fs');
 
@@ -26,15 +27,10 @@ const Events = {
             content:file
         });
     },
-    export:( win ) => {
-        win.webContents.send('export');
-    },
-    saveFile:( win ) => {
-        win.webContents.send('save');
-    },
-    about:( win ) => {
-        win.webContents.send('about');
-    }
+    export:( win, path ) => ( win.webContents.send('export', path) ),
+    saveFile:( win, path ) => ( win.webContents.send('save', path) ),
+    about:( win ) => ( win.webContents.send('about') ),
+    writeFile: ( obj ) => ( writeFileSync(obj.path, obj.content, 'utf-8') )
 }
 
 module.exports = Events;

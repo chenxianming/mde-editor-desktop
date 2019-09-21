@@ -85,15 +85,6 @@ const docGenerator = (title, theme, result) => {
     return string;
 }
 
-const eval1 = (str) => {
-    let script = document.createElement('script');
-    
-    script.type="text/javascript";
-    script.text=str;
-    document.getElementsByTagName('head')[0].appendChild(script);
-    document.head.removeChild(document.head.lastChild);
-}
-
 class CodeEditor extends React.Component{
     constructor(props) {
         super(props);
@@ -245,7 +236,6 @@ class CodePreview extends React.Component{
         
         this.onScroll = this.onScroll.bind( this );
         this.setFullScreen = this.setFullScreen.bind( this );
-        this.resultEvent = this.resultEvent.bind( this );
     }
 
     componentDidMount(){
@@ -308,45 +298,16 @@ class CodePreview extends React.Component{
         let codemirrorObj = global.Editor.refs.codemirrorObj,
             val = codemirrorObj.editor.getValue();
         
-        let eleLink = document.createElement('a');
-        
-        eleLink.download = 'save.md';
-        eleLink.style.display = 'none';
-        
-        var blob = new Blob([ val ]);
-        eleLink.href = URL.createObjectURL(blob);
-        
-        document.body.appendChild(eleLink);
-        eleLink.click();
-        
-        document.body.removeChild(eleLink);
+        return val;
     }
     
-    resultEvent(){
-        
-        //docGenerator
+    saveHtml(){
         let codemirrorObj = global.Editor.refs.codemirrorObj,
             val = codemirrorObj.editor.getValue();
         
         let sourceCode = docGenerator('Untitle', markdownTheme.minify, marked( val ) );
         
-        if( __CONFIG.result === 'export' ){
-            eval1(__CONFIG.getResult);
-            return global.getResult( sourceCode );
-        }
-        
-        let eleLink = document.createElement('a');
-        
-        eleLink.download = 'preview.html';
-        eleLink.style.display = 'none';
-        
-        var blob = new Blob([ sourceCode ]);
-        eleLink.href = URL.createObjectURL(blob);
-        
-        document.body.appendChild(eleLink);
-        eleLink.click();
-        
-        document.body.removeChild(eleLink);
+        return sourceCode;
     }
     
     render(){
@@ -362,9 +323,6 @@ class CodePreview extends React.Component{
                 <div className="BIconWrap">
                     <div className={'BIcon btn'} onClick={ this.setFullScreen }>
                         <Icon size={17} icon={ this.state.str } />
-                    </div>
-                    <div className={'BIcon btn'} onClick={ this.resultEvent }>
-                        <Icon size={17} icon={ ( __CONFIG.result === 'export' ? 'icon-icon_baocun' : 'icon-yunduanxiazai' ) } />
                     </div>
                 </div>
             </div>

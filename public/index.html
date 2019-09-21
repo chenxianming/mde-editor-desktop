@@ -62,12 +62,22 @@
         
         window.ipcRenderer = ipcRenderer;
         
-        ipcRenderer.on('export', function(){
-            window.Preview.resultEvent();
+        ipcRenderer.on('export', function( event, arg ){
+            let code = window.Preview.saveHtml();
+            
+            ipcRenderer.send( 'writeFile', {
+                path:arg,
+                content:code
+            } );
         });
         
-        ipcRenderer.on('save', function(){
-            window.Preview.saveMd();
+        ipcRenderer.on('save', function( event, arg ){
+            let code = window.Preview.saveMd();
+            
+            ipcRenderer.send( 'writeFile', {
+                path:arg,
+                content:code
+            } );
         });
         
         ipcRenderer.on('fileLoad', function( event, arg ){

@@ -67,6 +67,7 @@ class DocListItem extends React.Component{
         
         return (
             <div className={"DocListItem" + ( this.props.active ? ' active' : '' )} onClick={ this.props.onClick }>
+                <div className="DocListItemWrap">
                 <span>{ this.state.title }</span>
                 <div className={"DocListItemActions" + (this.state.active ? ' active' : '')}>
                     <div onClick={ () => this.rename( this.props.id ) } className={"DocListItemAction btn"}>
@@ -76,6 +77,8 @@ class DocListItem extends React.Component{
                         <Icon icon={ 'icon-shanchu' } size={ 17 } />
                     </div>
                 </div>
+                </div>
+                <p>{ this.props.content }</p>
             </div>
         );
     }
@@ -92,7 +95,8 @@ class DocList extends React.Component{
                     content:'',
                     active:true
                 }
-            ]
+            ],
+            keywords:""
         };
         
         this.onActive = this.onActive.bind( this );
@@ -187,8 +191,25 @@ class DocList extends React.Component{
         
         let self = this;
         
-        let lists = this.state.list.map( ( item, key ) => ( <DocListItem onClick={ () => self.onActive( item.id ) } id={ item.id } title={ item.title } active={ item.active } key={ key } /> ) );
+        let dataList = this.state.list,
+            newArr = [];
         
+        dataList.forEach( ( data ) => {
+            
+            let title = data.title.toLowerCase(),
+                content = data.content.toLowerCase(),
+                kw = self.state.keywords || '';
+            
+            if( ( title.indexOf(kw) > -1 ) || ( content.indexOf(kw) > -1 ) ){
+                newArr.push( data );
+            }
+            
+        } );
+        
+        dataList = newArr;
+ 
+        let lists = dataList.map( ( item, key ) => ( <DocListItem onClick={ () => self.onActive( item.id ) } content={ item.content } id={ item.id } title={ item.title } active={ item.active } key={ key } /> ) );
+                        
         return (
             <div className="DocList">
                 { lists }
@@ -205,6 +226,7 @@ class Drawer extends React.Component {
         };
         
         this.onClose = this.onClose.bind( this );
+        this.onChange = this.onChange.bind( this );
     }
     
     componentDidMount(){
@@ -224,6 +246,12 @@ class Drawer extends React.Component {
         });
     }
     
+    onChange( e ){
+        global.DocList.setState({
+            keywords:e.target.value
+        });
+    }
+    
     render(){
         return (
             <div className={"Drawer" + (this.state.isOpen ? ' active' : '')}>
@@ -233,9 +261,16 @@ class Drawer extends React.Component {
                         <NewDoc />
                         <span>Add new MD document</span>
                     </div>
-                    <Scrollbars className="DrawerScroll">
-                        <DocList />
-                    </Scrollbars>
+                    <div className="DrawerScrollWrap">
+                        <Scrollbars className="DrawerScroll">
+                            <DocList />
+                        </Scrollbars>
+                    </div>
+                    <div className="DrawerScrollSearch">
+                        <div className="DrawerScrollSearchInput">
+                            <input onChange={ this.onChange } type="text" placeholder="Search documents..." />
+                        </div>
+                    </div>
                 </div>
             </div>
         );

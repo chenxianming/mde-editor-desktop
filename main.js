@@ -1,8 +1,10 @@
 // Modules to control application life and create native browser window
 const {
     app,
-    BrowserWindow,
-    Menu
+    Menu,
+    shell,
+    dialog,
+    BrowserWindow
 } = require('electron')
 
 const path = require('path')
@@ -27,10 +29,11 @@ function createWindow() {
     })
 
     // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:3000/')
+    // mainWindow.loadURL('http://localhost:3000/')
+    mainWindow.loadFile('./build/index.html')
 
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
     
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -48,10 +51,6 @@ function createWindow() {
                     label: 'open',
                     accelerator: 'CmdOrCtrl+O',
                     click: async () => {
-                      const {
-                          shell,
-                          dialog
-                      } = require('electron')
 
                       dialog.showOpenDialog({
                           properties: ['openFile'],
@@ -74,14 +73,40 @@ function createWindow() {
                     label: 'save (.md)',
                     accelerator: 'CmdOrCtrl+S',
                     click: async () => {
-                        Events.saveFile( mainWindow );
+                        dialog.showSaveDialog({
+                            properties: ['openFile'],
+                            filters: [{
+                                name: 'Save file',
+                                extensions: ['md']
+                            }]
+                        }, (file) => {
+                            
+                            if( !file ){
+                                return ;
+                            }
+                            
+                            Events.saveFile( mainWindow, file );
+                        });
                     },
                 },
                 {
                     label: 'export (.html)',
                     accelerator: 'CmdOrCtrl+E',
                     click: async () => {
-                        Events.export( mainWindow );
+                        dialog.showSaveDialog({
+                            properties: ['openFile'],
+                            filters: [{
+                                name: 'Save file',
+                                extensions: ['html']
+                            }]
+                        }, (file) => {
+                            
+                            if( !file ){
+                                return ;
+                            }
+                            
+                            Events.export( mainWindow, file );
+                        });
                     },
                 },
                 {

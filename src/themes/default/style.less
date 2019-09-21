@@ -290,14 +290,25 @@ body .CodeMirror {
 .DocListItem{
     font-size: 14px;
     padding: 0 20px;
-    line-height: 39px;
-    height: 39px;
+    height: 79px;
     border-bottom: 1px solid @borderGray;
+    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    cursor: default;
+}
+.DocListItemWrap{
     align-items: center;
     justify-content: space-between;
     display: flex;
-    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-    cursor: default;
+    line-height: 30px;
+}
+.DocListItem p{
+    display:block;
+    height:40px;
+    overflow:hidden;
+    width:100%;
+    line-height: 20px;
+    font-size: 12px;
+    color: rgba(61,61,61,.8);
 }
 
 .DocListItem span{
@@ -504,6 +515,46 @@ body .CodeMirror {
     height: 100%;
     justify-content: center;
     align-items: center;
+}
+
+.DrawerScrollWrap{
+    position: absolute;
+    top: 50px;
+    bottom: 60px;
+    width: 100%;
+}
+
+.DrawerScrollSearch{
+    position:absolute;
+    width: 100%;
+    height: 50px;
+    left: 0;
+    bottom: 0;
+}
+
+.DrawerScrollSearchInput{
+    width: 260px;
+    height: 40px;
+    background: #f5f5f5;
+    position: relative;
+    margin:0 auto;
+    border-radius: 40px;
+    -webkit-border-radius: 40px;
+}
+
+.DrawerScrollSearchInput input{
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    outline: none;
+    position: absolute;
+    height: 20px;
+    line-height: 20px;
+    width: 80%;
+    left: 50%;
+    top: 50%;
+    margin: -10px 0 0 -40%;
 }
 
 /*

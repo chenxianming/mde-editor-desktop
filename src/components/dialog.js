@@ -155,7 +155,7 @@ class Dialog extends React.Component {
             replace = '';
         
         
-        replace = '\n``` \n' + arr.join('\n') + '\n``` \n';
+        replace = '\n~~~ \n' + arr.join('\n') + '\n~~~ \n';
         
         codemirrorObj.editor.replaceRange(replace, {
             line: cursor.line,
