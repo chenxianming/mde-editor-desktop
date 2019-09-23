@@ -39,13 +39,13 @@ import(`../themes/${ __CONFIG.theme }/markdown/markdown.min`).then( ( json ) => 
 
 import('../config.json').then( ( config ) => {
     
-    import(`../themes/${ config.theme }/config.json`).then( ( json ) => {
+    import(`../themes/${ config.theme }/config.json`).then( async ( json ) => {
         
         if( !global.Editor ){
             return ;
         }
         
-        let list = localSync.get(),
+        let list = await localSync.get() || [],
             currentIdx = -1;
         
         list.forEach( ( item, idx ) => ( ( item.active ) && ( currentIdx = idx ) ) );
@@ -54,6 +54,16 @@ import('../config.json').then( ( config ) => {
             code:list[ currentIdx ] ? list[ currentIdx ].content : json.markdownPreview.join('\n'),
             id:list[ currentIdx ] ? list[ currentIdx ].id : 0
         });
+        
+        global.DocList.setState({
+            list:[]
+        });
+        
+        setTimeout( () => {
+            global.DocList.setState({
+                list:list
+            });
+        }, 20 );
         
         setTimeout( () => {
             setInterval( syncLocalstorge, 100 );

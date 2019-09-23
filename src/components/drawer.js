@@ -96,6 +96,7 @@ class DocList extends React.Component{
                     active:true
                 }
             ],
+            results:[],
             keywords:""
         };
         
@@ -168,7 +169,9 @@ class DocList extends React.Component{
         }
         
         let lists = this.state.list,
-            lst;
+            results = this.state.results,
+            lst,
+            self = this;
         
         this.state.list.forEach( ( item ) => ( ( item.id === idx ) && ( lst = item ) ) );
         
@@ -177,9 +180,22 @@ class DocList extends React.Component{
             tar.active = ( tar.id === idx );
         }
         
+        for( let i = 0; i < results.length; i++ ){
+            let tar = results[i];
+            tar.active = ( tar.id === idx );
+        }
+        
         this.setState({
-            list:lists
+            list:[],
+            results:[]
         });
+        
+        setTimeout( () => {
+            self.setState({
+                list:lists,
+                results:results
+            });
+        }, 50 );
         
         global.Editor.setState({
             id:idx,
@@ -191,25 +207,10 @@ class DocList extends React.Component{
         
         let self = this;
         
-        let dataList = this.state.list,
-            newArr = [];
+        let dataList = self.state.keywords ? this.state.results : this.state.list;
         
-        dataList.forEach( ( data ) => {
-            
-            let title = data.title.toLowerCase(),
-                content = data.content.toLowerCase(),
-                kw = self.state.keywords || '';
-            
-            if( ( title.indexOf(kw) > -1 ) || ( content.indexOf(kw) > -1 ) ){
-                newArr.push( data );
-            }
-            
-        } );
-        
-        dataList = newArr;
- 
         let lists = dataList.map( ( item, key ) => ( <DocListItem onClick={ () => self.onActive( item.id ) } content={ item.content } id={ item.id } title={ item.title } active={ item.active } key={ key } /> ) );
-                        
+         
         return (
             <div className="DocList">
                 { lists }
@@ -247,9 +248,41 @@ class Drawer extends React.Component {
     }
     
     onChange( e ){
+        
         global.DocList.setState({
             keywords:e.target.value
         });
+        
+        let dataList = global.DocList.state.list,
+            orginalList = global.DocList.state.list,
+            newArr = [];
+        
+        dataList.forEach( ( data ) => {
+            
+            let title = data.title.toLowerCase(),
+                content = data.content.toLowerCase(),
+                kw = e.target.value || '';
+            
+            if( ( title.indexOf(kw) > -1 ) || ( content.indexOf(kw) > -1 ) ){
+                newArr.push( data );
+            }
+            
+        } );
+        
+        dataList = newArr;
+        
+        global.DocList.setState({
+            results:[],
+            list:[],
+        });
+        
+        setTimeout( () => {
+            global.DocList.setState({
+                results: dataList,
+                list:orginalList
+            });
+        }, 50 );
+        
     }
     
     render(){

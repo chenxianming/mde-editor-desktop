@@ -10,7 +10,6 @@ const {
 const path = require('path')
 
 const Events = require('./electronextensions/events');
-const syncEvent = require('./electronextensions/sync')();
 
 const { ipcMain } = require("electron");
 
@@ -29,7 +28,7 @@ function createWindow() {
     })
 
     // and load the index.html of the app.
-    // mainWindow.loadURL('http://localhost:3000/')
+    // mainWindow.loadURL('http://127.0.0.1:3000')
     mainWindow.loadFile('./build/index.html')
 
     // Open the DevTools.

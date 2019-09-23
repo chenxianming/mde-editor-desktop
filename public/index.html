@@ -72,6 +72,7 @@
         });
         
         ipcRenderer.on('save', function( event, arg ){
+            
             let code = window.Preview.saveMd();
             
             ipcRenderer.send( 'writeFile', {
