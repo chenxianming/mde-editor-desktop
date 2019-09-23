@@ -59,6 +59,15 @@ import('../config.json').then( ( config ) => {
             list:[]
         });
         
+        if( !list.length ){
+            list.push({
+                id:0,
+                title:'Untitle-0',
+                content:'',
+                active:true
+            });
+        }
+        
         setTimeout( () => {
             global.DocList.setState({
                 list:list
