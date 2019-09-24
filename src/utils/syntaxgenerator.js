@@ -176,7 +176,7 @@ const events = {
 </p>
 <p>
     <h5 style="margin-top:10px;margin-bottom:5px;"><b style="font-weight:700;font-size:14px;">More</b></h5>
-    <b style="font-weight:500;font-size:12px;margin-right:10px">MarkDown syntax</b><b style="font-weight:500;font-size:12px;margin-right:10px">MDE for Desktop</b><b style="font-weight:500;font-size:12px;margin-right:10px">MDE for Android</b>
+    <a href="http://daringfireball.net" style="font-weight:500;font-size:12px;margin-right:10px;color:#3d3d3d;text-decoration:none">MarkDown syntax</a><a href="https://github.com/chenxianming/mde-editor-desktop/releases" style="font-weight:500;font-size:12px;margin-right:10px;color:#3d3d3d;text-decoration:none">MDE for Desktop</a><a href="https://github.com/chenxianming/mde-web-embed-mobile" style="font-weight:500;font-size:12px;margin-right:10px;color:#3d3d3d;text-decoration:none">MDE for Android</a>
     <br />
     <br />
 </p>
