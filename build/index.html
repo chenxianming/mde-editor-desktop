@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="shortcut icon" href="./favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Markdown editor across Desktop / Web / App platform."/><link rel="apple-touch-icon" href="logo192.png"/><link rel="manifest" href="./manifest.json"/><title>MDE - Markdown editor across Desktop / Web / App platform.</title><style>.Preload{position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;background:#fff;opacity:0;visibility:hidden;transition:all .45s cubic-bezier(.215,.61,.355,1)}.Preload.open{opacity:1;visibility:visible}</style><link href="./static/css/8.7eb2da60.chunk.css" rel="stylesheet"><link href="./static/css/main.409a7e85.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script>const { ipcRenderer } = require("electron");
+        
+        window.ipcRenderer = ipcRenderer;
+        
+        ipcRenderer.on('export', function( event, arg ){
+            let code = window.Preview.saveHtml();
+            
+            ipcRenderer.send( 'writeFile', {
+                path:arg,
+                content:code
+            } );
+        });
+        
+        ipcRenderer.on('save', function( event, arg ){
+            
+            let code = window.Preview.saveMd();
+            
+            ipcRenderer.send( 'writeFile', {
+                path:arg,
+                content:code
+            } );
+        });
+        
+        ipcRenderer.on('fileLoad', function( event, arg ){
+
+            if( !global.Editor ){
+                return ;
+            }
+            
+            let list = global.DocList.state.list || [],
+                idxArr = [],
+                isExist = -1;
+            
+            // If file exist then..
+            list.forEach( ( lst, idx ) => {
+                ( lst.title == arg.name ) && ( isExist = lst.id );
+            } );
+            
+            if( isExist > -1 ){
+                return global.DocList.onActive( isExist );
+            }
+            
+            for( let i = 0; i < list.length; i++ ){
+                list[i].active = false;
+            }
+
+            list.forEach( ( lst ) => {
+                idxArr.push( lst.id );
+            } );
+
+            let max = Math.max.apply( Math, idxArr ),
+                idx = max+1;
+            
+            list.push({
+               id:idx,
+               title:arg.name,
+               content:arg.content,
+               active:false
+            });
+            
+            for( let i = 0; i < list.length; i++ ){
+                list[i].active = (i === list.length-1) ? true : false;
+            }
+            
+            global.DocList.setState({
+                list:[]
+            });
+            
+            setTimeout( () => {
+                
+                global.DocList.setState({
+                    list:list
+                });
+                
+                global.Editor.setState({
+                    code:list[ list.length - 1 ] ? list[ list.length - 1 ].content : '',
+                    id:list[ list.length - 1 ] ? list[ list.length - 1 ].id : 0
+                });
+                
+            }, 20 );
+            
+        });
+        
+        ipcRenderer.on('about', function(){
+            global.Editor.about();
+        });
+        
+        document.onclick = function(e){
+            var e = e || window.event,
+                target = e.target || e.srcElement;
+            
+            e.preventDefault();
+            
+            if( target.tagName.toLowerCase() != 'a' ){
+                return ;
+            }
+
+            ipcRenderer.send('openLink', target.href);
+        }</script><script>!function(o){function e(e){for(var a,c,r=e[0],t=e[1],n=e[2],d=0,f=[];d<r.length;d++)c=r[d],Object.prototype.hasOwnProperty.call(u,c)&&u[c]&&f.push(u[c][0]),u[c]=0;for(a in t)Object.prototype.hasOwnProperty.call(t,a)&&(o[a]=t[a]);for(s&&s(e);f.length;)f.shift()();return i.push.apply(i,n||[]),b()}function b(){for(var e,a=0;a<i.length;a++){for(var c=i[a],r=!0,t=1;t<c.length;t++){var n=c[t];0!==u[n]&&(r=!1)}r&&(i.splice(a--,1),e=l(l.s=c[0]))}return e}var c={},u={7:0},i=[];function l(e){if(c[e])return c[e].exports;var a=c[e]={i:e,l:!1,exports:{}};return o[e].call(a.exports,a,a.exports,l),a.l=!0,a.exports}l.e=function(t){var e=[],c=u[t];if(0!==c)if(c)e.push(c[2]);else{var a=new Promise(function(e,a){c=u[t]=[e,a]});e.push(c[2]=a);var r,n=document.createElement("script");n.charset="utf-8",n.timeout=120,l.nc&&n.setAttribute("nonce",l.nc),n.src=l.p+"static/js/"+({}[t]||t)+"."+{0:"9b14b547",1:"36440114",2:"eef7d448",3:"62e8a6cc",4:"f0572ae6",5:"3ed32c13",9:"f4db9303",10:"ff2e840e",11:"6e5cd18c",12:"6bea5e81",13:"a2c4fcdc",14:"05bc27fc",15:"ee60809c",16:"7cb8a2cf",17:"3869e91e",18:"327078ee",19:"356c584b",20:"b3b158c5",21:"22308a46",22:"2a6123b3",23:"e277697b",24:"3fc5c746",25:"03ccbe74",26:"52f3014d",27:"c089c121",28:"e02f9e1b",29:"d5548249",30:"4e279fea",31:"02d38957",32:"4b477f7f",33:"41b4aed4",34:"acbdab26",35:"9ff40401",36:"d151b088",37:"cc5e36d5",38:"d9e5d163",39:"77192d07",40:"b96eded0",41:"d9c15d70",42:"d6684656",43:"2a919abc",44:"94d62456",45:"f76e3ce1",46:"0c88c12b",47:"a9855344",48:"e0955d9e",49:"e136a2b7",50:"79dfe17a",51:"31412c81",52:"5d51d782",53:"6901136b",54:"2ebdcc47",55:"5c4112c4",56:"eceb1826",57:"9f72d1d0",58:"d02b5a07",59:"28602346",60:"f8529d9f",61:"19cd8b3a",62:"5fad0de6",63:"d49c5610",64:"a8b25eed",65:"4ba57d71",66:"c51ba1b8",67:"f73cb24d",68:"01121c3d",69:"aa2ff305",70:"116d0b58",71:"cbd4baa2",72:"3f9270b2",73:"4c6219af",74:"35fc48c4",75:"a6c0e4ef",76:"cb9d4488",77:"dab0d3eb",78:"364e64cf",79:"aa6dde91",80:"349b5993",81:"65ea6a20",82:"3b1ed31c",83:"7f945e4e",84:"0b29af46",85:"09bd42c3",86:"23eaa0fb",87:"d3fcbca7",88:"4a64ac27",89:"90105a26",90:"ea24d76f",91:"8e030d39",92:"0dda61a8",93:"cd877d33",94:"e9931a28",95:"85558662",96:"0ff38bc1",97:"67c68383",98:"52927fe3",99:"03490ae2",100:"15ec7e0b",101:"c51bbb54",102:"92b79114",103:"f85339aa",104:"601f28bf",105:"04aee695",106:"87a7e749",107:"1da94aea",108:"6120d751",109:"fc587e39",110:"b0723e91",111:"7eb7c481",112:"9a55549a",113:"5307020a",114:"b217bdb6",115:"5ab1dedc",116:"54335617",117:"6105c5f7",118:"039348da",119:"560c2e94",120:"a070fa7f",121:"a36154d8",122:"f569b356",123:"ff2952fe",124:"06da8e0a"}[t]+".chunk.js";var d=new Error;r=function(e){n.onerror=n.onload=null,clearTimeout(f);var a=u[t];if(0!==a){if(a){var c=e&&("load"===e.type?"missing":e.type),r=e&&e.target&&e.target.src;d.message="Loading chunk "+t+" failed.\n("+c+": "+r+")",d.name="ChunkLoadError",d.type=c,d.request=r,a[1](d)}u[t]=void 0}};var f=setTimeout(function(){r({type:"timeout",target:n})},12e4);n.onerror=n.onload=r,document.head.appendChild(n)}return Promise.all(e)},l.m=o,l.c=c,l.d=function(e,a,c){l.o(e,a)||Object.defineProperty(e,a,{enumerable:!0,get:c})},l.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},l.t=function(a,e){if(1&e&&(a=l(a)),8&e)return a;if(4&e&&"object"==typeof a&&a&&a.__esModule)return a;var c=Object.create(null);if(l.r(c),Object.defineProperty(c,"default",{enumerable:!0,value:a}),2&e&&"string"!=typeof a)for(var r in a)l.d(c,r,function(e){return a[e]}.bind(null,r));return c},l.n=function(e){var a=e&&e.__esModule?function(){return e.default}:function(){return e};return l.d(a,"a",a),a},l.o=function(e,a){return Object.prototype.hasOwnProperty.call(e,a)},l.p="./",l.oe=function(e){throw console.error(e),e};var a=this["webpackJsonpmde-editor"]=this["webpackJsonpmde-editor"]||[],r=a.push.bind(a);a.push=e,a=a.slice();for(var t=0;t<a.length;t++)e(a[t]);var s=r;b()}([])</script><script src="./static/js/8.3c1e73fa.chunk.js"></script><script src="./static/js/main.8bd53c87.chunk.js"></script></body></html>
